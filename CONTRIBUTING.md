@@ -20,7 +20,7 @@ raw private research, local absolute paths, or agent transcripts.
 ## Development setup
 
 ```bash
-git clone https://github.com/AgriciDaniel/claude-ads.git
+git clone https://github.com/gxenos/claude-ads.git
 cd claude-ads
 python -m venv .venv
 .venv/bin/python -m pip install --no-deps -e .

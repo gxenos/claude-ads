@@ -12,12 +12,12 @@ Claude Ads is a free, open source skill for Claude Code. Give it your ad account
 It is made for agencies, consultants, and in-house marketing teams. It reads your data and reports back. It does not change your accounts on its own.
 
 > [!NOTE]
-> Claude Ads is available from the [public repository](https://github.com/AgriciDaniel/claude-ads)
+> Install this fork from [gxenos/claude-ads](https://github.com/gxenos/claude-ads)
 > under the MIT License. No membership is required.
 
 ## Quickstart
 
-1. Install (see [Installation](#installation)): `/plugin marketplace add agricidaniel/claude-ads`, then `/plugin install claude-ads@ai-marketing-hub-claude-ads`.
+1. Install (see [Installation](#installation)): `/plugin marketplace add gxenos/claude-ads`, then `/plugin install claude-ads@ai-marketing-hub-claude-ads`.
 2. Run `/ads setup` and answer a few questions: your business model, goal, main conversion, monthly spend, active platforms, and who approves changes. Never paste API keys or tokens.
 3. Bring evidence: an account export (CSV or JSON), screenshots, or a pasted summary with its date range, currency, and timezone.
 4. Run `/ads audit google` (or `/ads audit all`). You get a report that states what passed, what failed, and what is missing.
@@ -103,22 +103,32 @@ runtime supports them.
 Prefer the host's native plugin flow or a tagged release archive with a verified
 SHA-256 checksum. Never pipe a remote installer directly to a shell.
 
-For Claude Code, the native plugin flow is:
+For Claude Code, install this fork with:
 
 ```text
-/plugin marketplace add agricidaniel/claude-ads
+/plugin marketplace add gxenos/claude-ads
 /plugin install claude-ads@ai-marketing-hub-claude-ads
 ```
 
-If you added this marketplace before v2.0.0, Claude Code still holds it under
-the stale local alias `agricidaniel-claude-ads`. Remove that alias, then re-add
-and install:
+The marketplace name remains `ai-marketing-hub-claude-ads`, as declared in
+`.claude-plugin/marketplace.json`; the GitHub source is `gxenos/claude-ads`.
 
-```text
-/plugin marketplace remove agricidaniel-claude-ads
-/plugin marketplace add agricidaniel/claude-ads
-/plugin install claude-ads@ai-marketing-hub-claude-ads
+If you already installed the upstream plugin, first run
+`claude plugin marketplace list` to check its registered name. For a default
+user-scope installation registered as `ai-marketing-hub-claude-ads`, switch to
+this fork from your terminal with:
+
+```bash
+claude plugin uninstall claude-ads@ai-marketing-hub-claude-ads --keep-data
+claude plugin marketplace remove ai-marketing-hub-claude-ads --scope user
+claude plugin marketplace add gxenos/claude-ads
+claude plugin install claude-ads@ai-marketing-hub-claude-ads
 ```
+
+Use the matching scope if the original install was project-local. If the list
+shows the older alias `agricidaniel-claude-ads`, use that registered name in the
+uninstall and marketplace-removal commands. Restart Claude Code after switching.
+The `--keep-data` option preserves the plugin's persistent data directory.
 
 Managed dependencies require CPython 3.11 or 3.12. Linux x86_64 requires glibc
 2.28 or later; musl is unsupported. macOS 11 x86_64/arm64 and Windows amd64
@@ -127,10 +137,10 @@ CI checks the Linux minimum in an AlmaLinux 8 glibc 2.28 container with both
 supported interpreters. This checks Python wheels and the managed CLI lifecycle;
 browser payloads and PDF system libraries require separate host verification.
 
-Or install from a local clone of the public repository:
+Or install from a local clone of this fork:
 
 ```bash
-git clone https://github.com/AgriciDaniel/claude-ads.git
+git clone https://github.com/gxenos/claude-ads.git
 cd claude-ads
 bash install.sh --source=local
 ```
@@ -150,31 +160,27 @@ bash install.sh --target=gemini --source=local --no-deps
 > `--agent-dir` if the auto-detected paths are wrong. The installer creates the
 > managed Python environment only for the `claude` and `codex` targets.
 
-`--source=git` (the default when the installer is run outside a checkout) clones
-the default branch HEAD, which is unpinned and is not a verified release. Prefer
-`--source=local` from a checkout you have reviewed, or a release archive.
+Use `--source=local` (PowerShell: `-Source local`) to install this fork. Both
+installers still hardcode the original `AgriciDaniel/claude-ads` repository for
+`--source=git` / `-Source git`; that mode can omit this fork's report and privacy
+fixes. The `--ref` / `-Ref` option pins that upstream Git source, not this fork.
 
-To pin a git install, add the opt-in `--ref` option (PowerShell: `-Ref`) with a
-tag, branch, or commit. It is valid only with `--source=git`. The installer
-validates the value strictly, checks it out detached, prints the resolved full
-commit SHA, and fails before installing anything if the ref does not resolve:
-
-```bash
-bash install.sh --source=git --ref=v2.1.0
-```
-
-A git ref is not a checksum-verified release, and nothing here is signed. A
-release zip checked with the `SHA256SUMS` recipe below remains the verified path.
+To pin this fork, check out a reviewed commit in your local clone with
+`git checkout --detach COMMIT_SHA` (replace `COMMIT_SHA` with the reviewed commit),
+then run the local installer. An upstream version tag alone does not establish
+that the fork's changes are included. A git ref is not a checksum-verified release
+or independent proof of origin.
 
 PowerShell uses the same managed ownership model:
 
 ```powershell
-git clone https://github.com/AgriciDaniel/claude-ads.git
+git clone https://github.com/gxenos/claude-ads.git
 Set-Location claude-ads
 .\install.ps1 -Source local
 ```
 
-Verify a release archive before using it. Each GitHub release publishes the zip,
+If using a release archive, confirm it was published by this fork and includes
+the changes you need. A packaged release must include the zip,
 `release-manifest.json`, `sbom.cdx.json`, and a `SHA256SUMS` file. Releases are
 checksummed, not signed, so a checksum confirms the files match what the release
 published and is not an independent proof of origin. Download all four files into
@@ -203,6 +209,40 @@ bash uninstall.sh --target=claude
 ```
 
 The PowerShell equivalent is `uninstall.ps1`.
+
+### Updating an existing installation
+
+For the plugin, refresh the fork's registered marketplace, update the plugin,
+and restart Claude Code:
+
+```bash
+claude plugin marketplace update ai-marketing-hub-claude-ads
+claude plugin update claude-ads@ai-marketing-hub-claude-ads
+```
+
+Confirm the registration points to `gxenos/claude-ads` first; an upstream
+registration continues to fetch upstream. When switching sources, use the
+reinstall procedure above even if the version strings match. Also use that
+data-preserving reinstall if an update reports the same version while you need
+newer source changes.
+
+For a standalone install, confirm `git remote get-url origin` points to
+`gxenos/claude-ads`, then update your clean fork checkout and rerun the same
+installer with the same target and any custom install roots:
+
+```bash
+git pull --ff-only
+bash install.sh --target=claude --source=local
+```
+
+On Windows, rerun `.\install.ps1 -Target claude -Source local`. Substitute your
+original target and path options. Use the same Bash or PowerShell installer
+that created the ownership manifest. If your checkout is pinned in detached-HEAD
+mode, select the next reviewed commit instead of running `git pull`.
+Do not overwrite an unowned legacy install
+or delete `ads-*` directories in bulk; review the exact collision paths reported
+by the installer. Keep account data and run directories separate from installed
+skill files.
 
 The Bash and PowerShell skill installers do not enable or load Cockpit. Its
 optional plugin has its own marketplace entry and curated archive, and requires

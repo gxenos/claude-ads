@@ -298,8 +298,8 @@ def test_marketplace_install_identifier_is_normalized() -> None:
     marketplace = json.loads(
         (root / ".claude-plugin/marketplace.json").read_text(encoding="utf-8")
     )
-    assert "/plugin marketplace add agricidaniel/claude-ads" in readme
-    assert "/plugin marketplace add AgriciDaniel/claude-ads" not in readme
+    assert "/plugin marketplace add gxenos/claude-ads" in readme
+    assert "/plugin marketplace add agricidaniel/claude-ads" not in readme
     assert f"/plugin install claude-ads@{marketplace['name']}" in readme
 
 
