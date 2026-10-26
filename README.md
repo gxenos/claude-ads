@@ -12,12 +12,8 @@ Claude Ads is a free, open source skill for Claude Code. Give it your ad account
 It is made for agencies, consultants, and in-house marketing teams. It reads your data and reports back. It does not change your accounts on its own.
 
 > [!NOTE]
-> You can get Claude Ads from two places: the **public release** at
-> [`AgriciDaniel/claude-ads`](https://github.com/AgriciDaniel/claude-ads)
-> (MIT licensed, no membership needed), and the **community mirror** at
-> `AI-Marketing-Hub/claude-ads`, where
-> [AI Marketing Hub Pro](https://www.skool.com/ai-marketing-hub-pro) members
-> get early access and direct collaboration.
+> Claude Ads is available from the [public repository](https://github.com/AgriciDaniel/claude-ads)
+> under the MIT License. No membership is required.
 
 ## Quickstart
 
